@@ -6,7 +6,8 @@ Proyecto downstreet, que tendrá 3 clases:
         - `private static String[] clases = {...}` Guardará un número de Strings que serán las clases 
             disponibles. // Podría hacerse con herencia(?).
         - `private String nombre` Guaradará el nombre del jugador.
-        - `private int salud` Será un entero que representará la salud del jugador.
+        - `private int saludMax` Será un entero que representará la salud máxima del jugador.
+        - `private int saludRestante` Guardará la salud que tiene actualmente Jugador.
         - `private int daño` Será un entero que representará el impacto en daño sobre los MONSTRUOS.
         - `private String clase` Será un String que coincidirá con alguno de los Strings de clases[] y determinará la **clase** del jugador.
     Métodos de la clase jugador

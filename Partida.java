@@ -21,10 +21,20 @@ public class Partida {
      * Devuelve un String aleatorio del array mapas.
      */
     public static String mapaAleatorio(){
-        return mapas[(int)Math.round(Math.random() * mapas.length - 1)];
+        return mapas[(int)Math.round(Math.random() * (mapas.length - 1))];
+    }
+    
+    public static void combate(Jugador j, Monstruos m){
+        while(j.getSaludRestante() > 0 || m.getSaludRestante() > 0){
+            
+        }
     }
     
     public static void main(String[] args) {
+        Jugador pruebaAlpha = new Jugador("ALPHA", 10, 5);
+        Monstruos pruebaAlpha1 = new Monstruos(10, 5);
         System.out.println(mapaAleatorio());
+        pruebaAlpha.ataqueJ(pruebaAlpha1);
+        System.out.println(pruebaAlpha1.toString());
     }
 }
