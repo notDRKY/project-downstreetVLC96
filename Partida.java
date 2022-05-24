@@ -5,6 +5,8 @@ package downstreet;
  * @author Francesc Tàpia Martorell
  * @version dv-v1
  */
+import java.util.Scanner;
+
 public class Partida {
     /**
      * Determinará la duración de la partida.
@@ -12,6 +14,7 @@ public class Partida {
      */
     private static final int DURACION = 5;
     // ¿podría ser una lista? -- probablemente no
+    
     /**
      * El array mapas[] contiene los mapas jugables en la Partida.
      */
@@ -24,17 +27,18 @@ public class Partida {
         return mapas[(int)Math.round(Math.random() * (mapas.length - 1))];
     }
     
-    public static void combate(Jugador j, Monstruos m){
-        while(j.getSaludRestante() > 0 || m.getSaludRestante() > 0){
-            
-        }
-    }
+//    public static Jugador creacionPj(String nombre, int classe) {
+//        Jugador jugador;
+//        jugador = switch (classe) {
+//            case 1 -> new Jugador(nombre, 100, 20, 0.05, Jugador.tipos[0]);
+//            case 2 -> new Jugador(nombre, 70, 25, 0.10, "PÍCARO");
+//            case 3 -> new Jugador(nombre, 50, 30, 0.05, "MAGO");
+//            default -> new Jugador(nombre, 1, 0, 0, "CULERO");
+//        };
+//        return jugador;
+//    }
     
     public static void main(String[] args) {
-        Jugador pruebaAlpha = new Jugador("ALPHA", 10, 5);
-        Monstruos pruebaAlpha1 = new Monstruos(10, 5);
-        System.out.println(mapaAleatorio());
-        pruebaAlpha.ataqueJ(pruebaAlpha1);
-        System.out.println(pruebaAlpha1.toString());
+
     }
 }
