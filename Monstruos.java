@@ -43,7 +43,33 @@ public class Monstruos {
      * restante de Jugador
      */
     private double roboSalud;
-
+    
+    /**
+     * Constructor por defecto de la clase Monstruos recibirá todos los atributos de la clase Monstruos
+     * menos la salud restante, que ha la hora de crear 
+     * @param saludMax | Establecerá la salud máxima de Monstruos
+     * @param dano | Establecerá el daño que inflinge Monstruos.
+     * @param jefe | Boolean que identifica si Monstruos es un jefe de zona.
+     * @param evasion | Evasion es la probabilidad de evitar el daño de un ataque.
+     * @param critico | Crítico es la probabilidad de multiplicar x 2 el daño que infligirá el
+     * ataque de Jugador
+     * @param roboSalud | Establece el porcentaje de robo de salud tiene Jugador sobre la salud
+     * restante de Jugador
+     */
+    public Monstruos(int saludMax, int dano, boolean jefe, double evasion, double critico, double roboSalud) {
+        this.saludMax = saludMax;
+        this.saludRestante = saludMax;
+        this.dano = dano;
+        this.jefe = jefe;
+        this.evasion = evasion;
+        this.critico = critico;
+        this.roboSalud = roboSalud;
+    }
+    
+    /**
+     * Método toString que devuelve un String con los datos de Monstruos.
+     * @return | Devulve un String con los datos de Monstruos.
+     */
     @Override
     public String toString() {
         return "MONSTRUO" + "\nSALUD MÁXIMA:\t" + saludMax
@@ -54,7 +80,12 @@ public class Monstruos {
                 + "\n% DE CRÍTICO:\t" + critico
                 + "\n% DE ROBO DE VIDA:\t" + roboSalud;
     }
-
+    
+    /**
+     * El método ataqueM apunta a un Jugador, se tendrá en cuenta
+     * si el Jugador j puede esquivar, si Montruos ha realizado un golpe crítico,
+     * @param j | Recibe por parámetro a el Jugador que apuntará el ataqueM().
+     */
     public void ataqueM(Jugador j) {
         // Guardo el daño ya calculado en danoAplicable para usar esta variable
         // varias veces:
@@ -69,7 +100,7 @@ public class Monstruos {
                 j.setSaludRestante(danoAplicable);
             }
             // Aplicar el robo de vida a SaludRestante de Monstruos
-            this.setSaludRestante((int) (danoAplicable * this.getRoboSalud()));
+            this.setSaludRestante(Math.max(this.getSaludMax(), (int)(this.getRoboSalud() + 1)));
         }
         // Si Jugador esquiva el ataque no pasa nada.
     }
@@ -151,5 +182,4 @@ public class Monstruos {
     public void setRoboSalud(double roboSalud) {
         this.roboSalud = roboSalud;
     }
-
 }

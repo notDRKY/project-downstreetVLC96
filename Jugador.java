@@ -31,7 +31,7 @@ public class Jugador {
      * tipos[] contiene lis tipos de personajes que se pueden elegir para jugar,
      * cada uno tendrá unas características.
      */
-    private static final String[] tipos = {"GUERRERO", "PÍCARO", "MAGO", ""};
+    private static final String[] tipos = {"GUERRERO", "PÍCARO", "MAGO"};
 
     /**
      * tipo será un número entero que determinará el tipo Jugador en el array
@@ -63,28 +63,79 @@ public class Jugador {
     private double roboSalud;
 
     /**
-     * @return | Devulve un String con los datos de Jugador.
+     * Constructor de la clase Jugador que recibirá dos parametros: 
+     * @param nombre | Determina el nombre del Jugador
+     * @param tipo | Determina el tipo de Jugador, según el tipo tendrá
+     * unas estadisticas u otras.
+     */
+    public Jugador(String nombre, int tipo) {
+        switch (tipo) {
+            // GUERRERO
+            case 0 -> {
+                this.nombre = nombre;
+                this.saludMax = 150;
+                this.saludRestante = this.getSaludMax();
+                this.dano = 35;
+                this.tipo = tipo;
+                this.pocionesRestantes = 3;
+                this.evasion = 0.02;
+                this.critico = 0.02;
+                this.roboSalud = 0;
+            }
+            // PÍCARO
+            case 1 -> {
+                this.nombre = nombre;
+                this.saludMax = 75;
+                this.saludRestante = this.getSaludMax();
+                this.dano = 40;
+                this.tipo = tipo;
+                this.pocionesRestantes = 3;
+                this.evasion = 0.10;
+                this.critico = 0.10;
+                this.roboSalud = 0.05;
+            }
+            // MAGO
+            case 2 -> {
+                this.nombre = nombre;
+                this.saludMax = 60;
+                this.saludRestante = this.getSaludMax();
+                this.dano = 50;
+                this.tipo = tipo;
+                this.pocionesRestantes = 3;
+                this.evasion = 0;
+                this.critico = 0.07;
+                this.roboSalud = 0;
+            }
+        }
+    }
+
+    /**
+     * Método toString que devuelve un String con los datos de Jugador.
+     * @return | Devuelve un String con los datos de Jugador.
      */
     @Override
     public String toString() {
-        return "JUGADOR" + "\nNOMBRE:\t" + nombre
+        return "JUGADOR" + "\nNOMBRE:\t\t" + nombre
                 + "\nSALUD MÁXIMA:\t" + saludMax
                 + "\nSALUD RESTANTE:\t" + saludRestante
-                + "\nDAÑO:\t" + dano
-                + "\nTIPO:\t" + tipo
+                + "\nDAÑO:\t\t" + dano
+                + "\nTIPO:\t\t" + tipos[tipo]
                 + "\nPOCIONES RESTANTES:\t" + pocionesRestantes
-                + "\n% DE EVASIÓN\t" + evasion
-                + "\n% DE CRÍTICO:\t" + critico
+                + "\n% DE EVASIÓN:\t" + evasion
+                + "\n% DE CRÍTICO:\t\t" + critico
                 + "\n% DE ROBO DE VIDA:\t" + roboSalud;
     }
 
     /**
-     *
+     * El método ataqueJ apunta a un Monstruos determiando, se tendrá en cuenta
+     * si el Monstruos m puede esquivar, si Jugador j ha realizado un golpe crítico,
+     * Jugador al final del método deberá lanzar el método curarse().
+     * @param m | Recibe por parámetro a el Monstruos que apuntará el ataqueJ().
      */
     public void ataqueJ(Monstruos m) {
         // Guardo el daño ya calculado en danoAplicable para usar esta variable
         // varias veces:
-        int danoAplicable = (this.getDano() - m.getSaludRestante());
+        int danoAplicable = (m.getSaludRestante() - this.getDano());
         // Si no puede esquivar...
         if (!m.puedeEsquivar()) {
             if (this.golpeCritico()) {
@@ -93,8 +144,10 @@ public class Jugador {
                 m.setSaludRestante(danoAplicable);
             }
             // Aplicar el robo de vida a SaludRestante de Monstruos
-            this.setSaludRestante((int) (danoAplicable * this.getRoboSalud()));
+            this.setSaludRestante(Math.max(this.getSaludMax(), (int) (this.getRoboSalud() + 1)));
         }
+        // Comprobamos si Jugador necesita curarse cada vez que haya atacado.
+        this.curacionJ();
         // Si Monstruos esquiva el ataque no pasa nada.
     }
 
@@ -105,9 +158,9 @@ public class Jugador {
      */
     public void curacionJ() {
         // Si saludRestante baja del 35%...
-        if (this.getSaludRestante() < (this.getSaludRestante() * 0.35)) {
+        if (this.getSaludRestante() < (this.getSaludMax() * 0.35)) {
             // Le sumaremos a la saludRestante de Jugador un 40% sobre esta misma.
-            this.setSaludRestante((int) (this.getSaludRestante() * 0.4));
+            this.setSaludRestante((int) (this.getSaludRestante() * 1.4));
             // Ajustamos las pocionesRestantes de Jugador
             this.setPocionesRestantes(this.getPocionesRestantes() - 1);
         }
