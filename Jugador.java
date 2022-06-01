@@ -3,7 +3,7 @@ package downstreet;
 /**
  *
  * @author Francesc Tàpia Martorell
- * @version dv-v2
+ * @version dv-v3.2
  */
 public class Jugador {
 
@@ -63,7 +63,8 @@ public class Jugador {
     private double roboSalud;
 
     /**
-     * Constructor de la clase Jugador que recibirá dos parametros: 
+     * Constructor de la clase Jugador que recibirá dos parametros:
+     *
      * @param nombre | Determina el nombre del Jugador
      * @param tipo | Determina el tipo de Jugador, según el tipo tendrá
      * unas estadisticas u otras.
@@ -73,7 +74,7 @@ public class Jugador {
             // GUERRERO
             case 0 -> {
                 this.nombre = nombre;
-                this.saludMax = 150;
+                this.saludMax = 175;
                 this.saludRestante = this.getSaludMax();
                 this.dano = 35;
                 this.tipo = tipo;
@@ -111,6 +112,7 @@ public class Jugador {
 
     /**
      * Método toString que devuelve un String con los datos de Jugador.
+     *
      * @return | Devuelve un String con los datos de Jugador.
      */
     @Override
@@ -130,21 +132,32 @@ public class Jugador {
      * El método ataqueJ apunta a un Monstruos determiando, se tendrá en cuenta
      * si el Monstruos m puede esquivar, si Jugador j ha realizado un golpe crítico,
      * Jugador al final del método deberá lanzar el método curarse().
+     *
      * @param m | Recibe por parámetro a el Monstruos que apuntará el ataqueJ().
      */
     public void ataqueJ(Monstruos m) {
-        // Guardo el daño ya calculado en danoAplicable para usar esta variable
+        // Guardo el daño ya calculado en saludResultante para usar esta variable
         // varias veces:
-        int danoAplicable = (m.getSaludRestante() - this.getDano());
+        int saludResultante = (m.getSaludRestante() - this.getDano());
         // Si no puede esquivar...
         if (!m.puedeEsquivar()) {
             if (this.golpeCritico()) {
-                m.setSaludRestante(danoAplicable * 2);
+                // Si asestas un golpe crítico el daño se multiplicará por 2
+                m.setSaludRestante(saludResultante / 2);
+                System.out.println("  !Has realizado un golpe crítico!"
+                        + " [ el enemigo tiene " + m.getSaludRestante() + "/" + m.getSaludMax()
+                        + " de salud restante ]");
             } else {
-                m.setSaludRestante(danoAplicable);
+                // Si no el ataque será un ataque
+                m.setSaludRestante(saludResultante);
+                System.out.println("  ¡Le has dado una buena al tíooo!"
+                        + " [ el enemigo tiene " + m.getSaludRestante() + "/" + m.getSaludMax()
+                        + " de salud restante ]");
             }
-            // Aplicar el robo de vida a SaludRestante de Monstruos
-            this.setSaludRestante(Math.max(this.getSaludMax(), (int) (this.getRoboSalud() + 1)));
+            // Aplicar el robo de vida a SaludRestante de Jugador
+            this.setSaludRestante((int) (m.getSaludRestante() * (this.getRoboSalud() + 1)));
+        } else {
+            System.out.println("  !Te han esquivado!");
         }
         // Comprobamos si Jugador necesita curarse cada vez que haya atacado.
         this.curacionJ();
@@ -161,8 +174,10 @@ public class Jugador {
         if (this.getSaludRestante() < (this.getSaludMax() * 0.35)) {
             // Le sumaremos a la saludRestante de Jugador un 40% sobre esta misma.
             this.setSaludRestante((int) (this.getSaludRestante() * 1.4));
+            
             // Ajustamos las pocionesRestantes de Jugador
             this.setPocionesRestantes(this.getPocionesRestantes() - 1);
+            System.out.println("  ¡Has usado una poción!");
         }
     }
 
@@ -171,7 +186,7 @@ public class Jugador {
      * Monstruo
      */
     public boolean puedeEsquivar() {
-        return (this.getEvasion() <= Math.round(Math.random()));
+        return (this.getEvasion() > Math.random());
     }
 
     /**
@@ -179,7 +194,7 @@ public class Jugador {
      * ataque del Jugador
      */
     public boolean golpeCritico() {
-        return (this.getCritico() <= Math.round(Math.random()));
+        return (this.getCritico() > Math.random());
     }
 
     /*
@@ -237,7 +252,11 @@ public class Jugador {
     }
 
     public void setSaludRestante(int saludRestante) {
-        this.saludRestante = saludRestante;
+        if (saludRestante > this.saludMax) {
+            this.saludRestante = this.saludMax;
+        } else {
+            this.saludRestante = saludRestante;
+        }
     }
 
     public void setDano(int dano) {
@@ -249,7 +268,11 @@ public class Jugador {
     }
 
     public void setPocionesRestantes(int pocionesRestantes) {
-        this.pocionesRestantes = pocionesRestantes;
+        if (pocionesRestantes < 0) {
+            this.pocionesRestantes = 0;
+        } else {
+            this.pocionesRestantes = pocionesRestantes;
+        }
     }
 
     public void setEvasion(double evasion) {

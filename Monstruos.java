@@ -3,7 +3,7 @@ package downstreet;
 /**
  *
  * @author Francesc Tàpia Martorell
- * @version dv-v2
+ * @version dv-v3.2
  */
 public class Monstruos {
 
@@ -43,10 +43,11 @@ public class Monstruos {
      * restante de Jugador
      */
     private double roboSalud;
-    
+
     /**
      * Constructor por defecto de la clase Monstruos recibirá todos los atributos de la clase Monstruos
-     * menos la salud restante, que ha la hora de crear 
+     * menos la salud restante, que ha la hora de crear
+     *
      * @param saludMax | Establecerá la salud máxima de Monstruos
      * @param dano | Establecerá el daño que inflinge Monstruos.
      * @param jefe | Boolean que identifica si Monstruos es un jefe de zona.
@@ -65,9 +66,10 @@ public class Monstruos {
         this.critico = critico;
         this.roboSalud = roboSalud;
     }
-    
+
     /**
      * Método toString que devuelve un String con los datos de Monstruos.
+     *
      * @return | Devulve un String con los datos de Monstruos.
      */
     @Override
@@ -80,29 +82,36 @@ public class Monstruos {
                 + "\n% DE CRÍTICO:\t" + critico
                 + "\n% DE ROBO DE VIDA:\t" + roboSalud;
     }
-    
+
     /**
      * El método ataqueM apunta a un Jugador, se tendrá en cuenta
      * si el Jugador j puede esquivar, si Montruos ha realizado un golpe crítico,
+     *
      * @param j | Recibe por parámetro a el Jugador que apuntará el ataqueM().
      */
     public void ataqueM(Jugador j) {
-        // Guardo el daño ya calculado en danoAplicable para usar esta variable
+        // Guardo el daño ya calculado en saludResultante para usar esta variable
         // varias veces:
-        int danoAplicable = (this.getDano() - j.getSaludRestante());
+        int saludResultante = (j.getSaludRestante() - this.getDano());
         // Si Jugador no puede esquivar...
         if (!j.puedeEsquivar()) {
             // Si hay impacto crítico...
             if (this.golpeCritico()) {
-                j.setSaludRestante(danoAplicable * 2);
+                j.setSaludRestante(saludResultante / 2);
+                System.out.println("  ¡MI REY TE HAN ASESTADO UN GOLPE CRÍTICO!"
+                        + " [ te queda " + j.getSaludRestante() + "/" + j.getSaludMax() + " ]");
             } else {
                 // Si no hay impacto crítico
-                j.setSaludRestante(danoAplicable);
+                j.setSaludRestante(saludResultante);
+                System.out.println("  ¡Un chicho te ha golpeado con una botella rota!"
+                        + " [ te queda " + j.getSaludRestante() + "/" + j.getSaludMax() + " ]");
             }
             // Aplicar el robo de vida a SaludRestante de Monstruos
-            this.setSaludRestante(Math.max(this.getSaludMax(), (int)(this.getRoboSalud() + 1)));
+            this.setSaludRestante((int) (j.getSaludRestante() * (this.getRoboSalud() + 1)));
+        } else {
+            // Si Jugador esquiva el ataque no pasa nada.
+            System.out.println("  ¡Has esquivado el navajazo cruck!");
         }
-        // Si Jugador esquiva el ataque no pasa nada.
     }
 
     /**
@@ -110,7 +119,7 @@ public class Monstruos {
      * Jugador
      */
     public boolean puedeEsquivar() {
-        return (this.getEvasion() <= Math.round(Math.random()));
+        return (this.getEvasion() > Math.random());
     }
 
     /**
@@ -118,7 +127,7 @@ public class Monstruos {
      * ataque del Monstruos
      */
     public boolean golpeCritico() {
-        return (this.getCritico() <= Math.round(Math.random()));
+        return (this.getCritico() > Math.random());
     }
 
     /*
@@ -160,7 +169,11 @@ public class Monstruos {
     }
 
     public void setSaludRestante(int saludRestante) {
-        this.saludRestante = saludRestante;
+        if (saludRestante > this.saludMax) {
+            this.saludRestante = this.saludMax;
+        } else {
+            this.saludRestante = saludRestante;
+        }
     }
 
     public void setDano(int dano) {

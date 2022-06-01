@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  *
  * @author Francesc Tàpia Martorell
- * @version dv-v2
+ * @version dv-v3.2
  */
 public class Partida {
 
@@ -161,7 +161,6 @@ public class Partida {
         } while (!(tipoPj >= 0 && tipoPj < 3));
 
         //teclado.nextLine();
-
         Jugador j = new Jugador(nombrePj, tipoPj);
         System.out.println("TÚ PERSONAJE SERÁ: ");
         System.out.println(j.toString());
@@ -176,7 +175,8 @@ public class Partida {
      * cartas en el método combate.
      */
     private boolean seJuegaCartas() {
-        return 35 > (Math.random() * 100) + 1;
+        // 25% de probabilidad
+        return 25 > (Math.random() * 100) + 1;
     }
 
     /**
@@ -193,19 +193,19 @@ public class Partida {
             String decision;
             int c1 = (int) Math.round(Math.random() * 10) + 1;
             System.out.println("¡SE JUEGA A LAS CARTAS!");
-            System.out.println("La primera carta es un: " + c1);
-            System.out.print("La segunda carta será mayor o menor?");
+            System.out.println("  La primera carta es un: " + c1);
+            System.out.print("  La segunda carta será mayor o menor? ");
             int c2 = (int) Math.round(Math.random() * 10) + 1;
 
             decision = teclado.nextLine();
-            if (decision.equals("mayor") && c2 > c1) {
-                System.out.println("Correcto! La carta era: " + c2);
+            if (decision.trim().toLowerCase().equals("mayor") && c2 > c1) {
+                System.out.println("  Correcto! La carta era: " + c2);
                 return true;
-            } else if (decision.equals("menor") && c2 < c1) {
-                System.out.println("Correcto! La carta era: " + c2);
+            } else if (decision.trim().toLowerCase().equals("menor") && c2 < c1) {
+                System.out.println("  Correcto! La carta era: " + c2);
                 return true;
             } else {
-                System.out.println("Incorrecto! La carta era: " + c2);
+                System.out.println("  Incorrecto! La carta era: " + c2);
                 /*
                  * Si comentamos este return cuando Jugador falle en el
                  * juego de cartas, se ejecutará el while de más abajo
@@ -215,14 +215,12 @@ public class Partida {
             }
         }
         while (jugador.getSaludRestante() > 0 && m.getSaludRestante() > 0) {
+            System.out.println("  ---TURNO JUGADOR---");
             jugador.ataqueJ(m);
-            System.out.println(jugador.getNombre() + " ataca! -> [" + jugador.getNombre()
-                + " inflinge " + jugador.getDano() + "!]");
-            
-            m.ataqueM(jugador);
-            System.out.println("!Te ha atacado un monstruo! -> [te han infligido "
-                + m.getDano() + ", te queda " + jugador.getSaludRestante() + "/" + jugador.getSaludMax()
-                + " salud restante]");
+            if (m.getSaludRestante() > 0) {
+                System.out.println("  ---TURNO MONSTRUO---");
+                m.ataqueM(jugador);
+            }
         }
         return (jugador.getSaludRestante() > 0);
     }
@@ -243,34 +241,34 @@ public class Partida {
         } catch (IOException ex) {
             System.out.println("¡ERROR EN LA LECTURA DE MONSTRUOS (Fichero config.txt)!");
         }
-        for (int i = 0; i < listaMonstruos1.size() && siguesVivo; i++) {
-            this.mapa = mapaAleatorio();
-            System.out.println("[ZONA 1] ESTAS EN: " + this.mapa);
+        System.out.println("[ZONA 1] ESTAS EN: " + mapaAleatorio() + " ¡han aparecido " + listaMonstruos1.size() + " monstruos!");
+        for (int i = 0; siguesVivo && i < listaMonstruos1.size(); i++) {
             siguesVivo = combate(listaMonstruos1.get(i));
+            System.out.println(" -> PULSA ENTER PARA CONTINUAR <- ");
             teclado.nextLine();
         }
-        for (int i = 0; i < listaMonstruos2.size() && siguesVivo; i++) {
-            this.mapa = mapaAleatorio();
-            System.out.println("[ZONA 2] ESTAS EN: " + this.mapa);
+        System.out.println("[ZONA 2] ESTAS EN: " + mapaAleatorio() + " ¡han aparecido " + listaMonstruos2.size() + " monstruos!");
+        for (int i = 0; siguesVivo && i < listaMonstruos2.size(); i++) {
             siguesVivo = combate(listaMonstruos2.get(i));
+            System.out.println(" -> PULSA ENTER PARA CONTINUAR <- ");
             teclado.nextLine();
         }
-        for (int i = 0; i < listaMonstruos3.size() && siguesVivo; i++) {
-            this.mapa = mapaAleatorio();
-            System.out.println("[ZONA 3] ESTAS EN: " + this.mapa);
+        System.out.println("[ZONA 3] ESTAS EN: " + mapaAleatorio() + " ¡han aparecido " + listaMonstruos3.size() + " monstruos!");
+        for (int i = 0; siguesVivo && i < listaMonstruos3.size(); i++) {
             siguesVivo = combate(listaMonstruos3.get(i));
+            System.out.println(" -> PULSA ENTER PARA CONTINUAR <- ");
             teclado.nextLine();
         }
-        for (int i = 0; i < listaMonstruos4.size() && siguesVivo; i++) {
-            this.mapa = mapaAleatorio();
-            System.out.println("[ZONA 4] ESTAS EN: " + this.mapa);
+        System.out.println("[ZONA 4] ESTAS EN: " + mapaAleatorio() + " ¡han aparecido " + listaMonstruos4.size() + " monstruos!");
+        for (int i = 0; siguesVivo && i < listaMonstruos4.size(); i++) {
             siguesVivo = combate(listaMonstruos4.get(i));
+            System.out.println(" -> PULSA ENTER PARA CONTINUAR <- ");
             teclado.nextLine();
         }
-        for (int i = 0; i < listaMonstruos5.size() && siguesVivo; i++) {
-            this.mapa = mapaAleatorio();
-            System.out.println("[ZONA 5] ESTAS EN: " + this.mapa);
+        System.out.println("[ZONA 5] ESTAS EN: " + mapaAleatorio() + " ¡han aparecido " + listaMonstruos5.size() + " monstruos!");
+        for (int i = 0; siguesVivo && i < listaMonstruos5.size(); i++) {
             siguesVivo = combate(listaMonstruos5.get(i));
+            System.out.println(" -> PULSA ENTER PARA CONTINUAR <- ");
             teclado.nextLine();
         }
         //siguesvivo = llamar a combate(arraylist1.get())
@@ -294,8 +292,8 @@ public class Partida {
         do {
             Partida p1 = new Partida();
             p1.jugar();
-            System.out.print("¿Quieres volver a jugar? [S / N]");
+            System.out.print("¿Quieres volver a jugar? [S / N] ");
             candado = teclado.nextLine();
-        } while (candado.toLowerCase().equals("s"));
+        } while (candado.trim().toLowerCase().equals("s"));
     }
 }
